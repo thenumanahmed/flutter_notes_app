@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //initializing hive db
+  var directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+
   runApp(const MyApp());
 }
 
