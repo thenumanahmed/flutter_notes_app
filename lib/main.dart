@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:notes_app/models/notes_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'home_screen.dart';
@@ -10,6 +11,12 @@ void main() async {
   //initializing hive db
   var directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
+
+  //register the hive adapter
+  Hive.registerAdapter(NotesModelAdapter());
+
+  //open the hive box to store the data
+  Hive.openBox<NotesModel>('notes');
 
   runApp(const MyApp());
 }
