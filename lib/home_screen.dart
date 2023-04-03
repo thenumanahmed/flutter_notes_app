@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:notes_app/models/notes_model.dart';
+import 'package:hive_flutter/adapters.dart';
 
+import 'models/notes_model.dart';
 import 'boxes/boxes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,9 +20,38 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: Column(
-        children: [],
-      ),
+      body: ValueListenableBuilder<Box<NotesModel>>(
+          //listenable is from hive for realtime changing
+          valueListenable: Boxes.getData().listenable(),
+          builder: (context, box, _) {
+            var data = box.values.toList().cast<NotesModel>();
+            return ListView.builder(
+                itemCount: box.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 5,
+                    ),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 5,
+                        ),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(data[index].title.toString()),
+                              const SizedBox(height: 20),
+                              Text(data[index].description.toString()),
+                            ]),
+                      ),
+                    ),
+                  );
+                });
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           _showMyDialog();
@@ -78,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   final box = Boxes.getData();
                   box.add(data);
                   //saved in the storage (by hiveObject)
-                  data.save();
+                  //   data.save();
                   //clear the controllers
                   titleController.clear();
                   desController.clear();
