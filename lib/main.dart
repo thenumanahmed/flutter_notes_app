@@ -16,7 +16,7 @@ void main() async {
   Hive.registerAdapter(NotesModelAdapter());
 
   //open the hive box to store the data
-  Hive.openBox<NotesModel>('notes');
+  await Hive.openBox<NotesModel>('notes');
 
   runApp(const MyApp());
 }
